@@ -1,5 +1,6 @@
 """Lista estudiantes"""
 import json
+import pandas as pd
 
 def cargar_datos():
     try:
@@ -45,6 +46,7 @@ def modificar_datos_estudiante(lista):
     return lista
 
 def eliminar_estudiante(lista):
+    visualizar_estudiantes(lista)
     rut = input("Escriba el rut del estudiante a eliminar")
 
     for estudiante in lista:
@@ -62,23 +64,31 @@ def visualizar_estudiantes(lista):
         print("No hay estudiantes registrados.")
     else:
         print("Lista de Estudiantes:")
-        for i in lista:
-            print(f"Nombre: {i[0]}, RUT: {i[1]}, Matrícula: {i[2]}")
+        vizualizar = pd.DataFrame(lista)
+        print(f"{vizualizar}\n")
 
 def menu_estudiantes():
     listaEstudiantes = cargar_datos()
     while True:
-        opcion = input("uwu")
-
-        if opcion == "1":
-            listaEstudiantes = agregar_estudiante(listaEstudiantes)
-        elif opcion == "2":
-            listaEstudiantes = modificar_datos_estudiante(listaEstudiantes)
-        elif opcion == "3":
-            visualizar_estudiantes(listaEstudiantes)
-        elif opcion == "4":
-            listaEstudiantes = eliminar_estudiante(listaEstudiantes)
-        elif opcion == "5":
-            guardar_datos(listaEstudiantes)
-            break
-menu_estudiantes()
+        print("GESTIÓN DE ESTUDIANTES")
+        option = input(
+"""
+1) Añadir Datos Personales Estudiante
+2) Actualizar Datos Personales del Estudiante
+3) Visualizar Lista de Estudiantes
+4) Eliminar Datos del Estudiante
+5) Guardar y Salir
+""")
+        match option:
+            case "1":
+                listaEstudiantes = agregar_estudiante(listaEstudiantes)
+            case "2":
+                listaEstudiantes = modificar_datos_estudiante(listaEstudiantes)
+            case "3":
+                visualizar_estudiantes(listaEstudiantes)
+                input("Presione una tecla para continuar ")
+            case "4":
+                listaEstudiantes = eliminar_estudiante(listaEstudiantes)
+            case "5":
+                guardar_datos(listaEstudiantes)
+                break

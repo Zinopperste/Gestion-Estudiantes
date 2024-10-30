@@ -1,13 +1,11 @@
 """Lista estudiantes"""
 import pandas as pd
-from datos_estudiantes import*
 
 def agregar_estudiante(lista):
     # Pedir el nombre del estudiante
     nombre = input("Ingrese el nombre del estudiante: ")
     rut = input("Ingrese el rut del estudiante: ")
     matricula = input("Ingrese la matricula del estudiante: ")
-
 
     estudiante = (nombre, rut, matricula)
     lista.append(estudiante)
@@ -49,31 +47,8 @@ def visualizar_estudiantes(lista):
         print("No hay estudiantes registrados.")
     else:
         print("Lista de Estudiantes:")
-        vizualizar = pd.DataFrame(lista)
-        print(f"{vizualizar}\n")
-
-def menu_estudiantes():
-    listaEstudiantes = cargar_datos()
-    while True:
-        print("GESTIÓN DE ESTUDIANTES")
-        option = input(
-"""
-1) Añadir Datos Personales Estudiante
-2) Actualizar Datos Personales del Estudiante
-3) Visualizar Lista de Estudiantes
-4) Eliminar Datos del Estudiante
-5) Guardar y Salir
-""")
-        match option:
-            case "1":
-                listaEstudiantes = agregar_estudiante(listaEstudiantes)
-            case "2":
-                listaEstudiantes = modificar_datos_estudiante(listaEstudiantes)
-            case "3":
-                visualizar_estudiantes(listaEstudiantes)
-                input("Presione una tecla para continuar ")
-            case "4":
-                listaEstudiantes = eliminar_estudiante(listaEstudiantes)
-            case "5":
-                guardar_datos(listaEstudiantes)
-                break
+        #queria agregar encabezados pero... necesitamos saber como uniremos todos los datos de los demás modulos
+        #ya que para mostrarlos con ese parametro es necesario que el número de columnas sean fijas a las definidas en "encabezados"
+        #encabezados = ["Nombre", "RUT", "Matrícula"]
+        visualizar = pd.DataFrame(lista)
+        print(f"{visualizar}\n")

@@ -1,5 +1,34 @@
 import os
 import gestion as gt
+
+def menu_estudiantes():
+    listaEstudiantes = gt.cargar_datos()
+    while True:
+        os.system("cls")
+        print("GESTIÓN DE ESTUDIANTES")
+        option = input(
+"""
+1) Añadir Datos Personales Estudiante
+2) Actualizar Datos Personales del Estudiante
+3) Visualizar Lista de Estudiantes
+4) Eliminar Datos del Estudiante
+5) Guardar y Salir
+""")
+        match option:
+            case "1":
+                listaEstudiantes = gt.agregar_estudiante(listaEstudiantes)
+            case "2":
+                listaEstudiantes = gt.modificar_datos_estudiante(listaEstudiantes)
+            case "3":
+                gt.visualizar_estudiantes(listaEstudiantes)
+                input("Presione una tecla para continuar ")
+            case "4":
+                listaEstudiantes = gt.eliminar_estudiante(listaEstudiantes)
+            case "5":
+                gt.guardar_datos(listaEstudiantes)
+                break
+
+
 while True:
     os.system("cls")
     print("BIENVENIDO AL SISTEMA DE GESTIÓN DE LA UNIVERSIDAD APLAPLAC - SEDE CONCEPCIÓN")
@@ -16,8 +45,7 @@ Menú:
         
 #Menú para la gestión de los estudiantes
         case "1":
-            os.system("cls")
-            gt.menu_estudiantes()
+            menu_estudiantes()
 
 #Menú para la gestion de los cursos y calificaciónes
         case "2":

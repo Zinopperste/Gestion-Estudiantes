@@ -1,54 +1,129 @@
-"""Lista estudiantes"""
+import json
+import os
+import time
 import pandas as pd
+from gestion.gestion_cursos import CARRERAS
 
-def agregar_estudiante(lista):
-    # Pedir el nombre del estudiante
-    nombre = input("Ingrese el nombre del estudiante: ")
-    rut = input("Ingrese el rut del estudiante: ")
-    matricula = input("Ingrese la matricula del estudiante: ")
+db_dir = os.path.join("gestion", "db_sys")
+os.makedirs(db_dir, exist_ok=True)
+database_file = os.path.join(db_dir, "database.json")
+backup_file = os.path.join(db_dir, "backup.json")
 
-    estudiante = (nombre, rut, matricula)
-    lista.append(estudiante)
-    print(f"El estudiante {nombre} ha sido agregado con exito.")
-    return lista
+lista_estudiantes = []
+datos_estudiantes = {}
 
-def modificar_datos_estudiante(lista):
-    rut = input("Escriba el rut del estudiante a modificar: ")
-    
-    for i, estudiante in enumerate(lista):
-        if estudiante[1] == rut:
-            nombre_estudiante, rut_estudiante, matricula_estudiante = estudiante
-            nuevo_nombre = input("Escriba el nuevo nombre del estudiante: ")
-            nueva_matricula = input("Escriba la nueva matricula del estudiante: ")
-            nuevo_nombre = nuevo_nombre if nuevo_nombre else nombre_estudiante
-            nueva_matricula = nueva_matricula if nueva_matricula else matricula_estudiante
-            lista[i] = (nuevo_nombre, rut_estudiante, nueva_matricula)
-            print("Estudiante actualizado.")
-            return lista
-    print("Estudiante no encontrado.")
-    return lista
-
-def eliminar_estudiante(lista):
-    visualizar_estudiantes(lista)
-    rut = input("Escriba el rut del estudiante a eliminar")
-
-    for estudiante in lista:
-        if estudiante[1] == rut:
-            lista.remove(estudiante)
-            print(f"Estudiante con rut {estudiante[1]} eliminado exitosamente")
-            return lista
-            
-    print("Estudiante no encontrado.")
-    return lista
-    
-
-def visualizar_estudiantes(lista):
-    if not lista:
-        print("No hay estudiantes registrados.")
+def cargar_datos():
+    global datos_estudiantes, lista_estudiantes
+    if os.path.exists(database_file):
+        with open(database_file, "r") as file:
+            datos_estudiantes = json.load(file)
+            lista_estudiantes = [(rut_estu, data["nombre"]) for rut_estu, data in datos_estudiantes.items()]
     else:
-        print("Lista de Estudiantes:")
-        #queria agregar encabezados pero... necesitamos saber como uniremos todos los datos de los demás modulos
-        #ya que para mostrarlos con ese parametro es necesario que el número de columnas sean fijas a las definidas en "encabezados"
-        #encabezados = ["Nombre", "RUT", "Matrícula"]
-        visualizar = pd.DataFrame(lista)
-        print(f"{visualizar}\n")
+        datos_estudiantes = {}
+    return datos_estudiantes
+
+def guardar_datos():
+    with open(database_file, "w") as file:
+        json.dump(datos_estudiantes, file, indent=4)
+
+def agregar_estudiante(RUT_estudiante, nombre, matricula):
+    if RUT_estudiante in datos_estudiantes:
+        print("Error: El estudiante con esta identificación ya existe.")
+        time.sleep(2)
+        return datos_estudiantes
+    
+    print("Seleccione una carrera de las opciones disponibles:")
+    carreras_disponibles = list(CARRERAS.keys())  # Obtener las carreras como lista
+    
+    for i, carrera in enumerate(carreras_disponibles, start=1):
+        print(f"{i}) {carrera}")
+    
+    while True:
+        try:
+            carrera_opcion = int(input("Ingrese el número de la carrera: ")) - 1
+            if 0 <= carrera_opcion < len(carreras_disponibles):
+                carrera_seleccionada = carreras_disponibles[carrera_opcion]
+                break
+            else:
+                print("Por favor, ingrese un número dentro del rango de opciones.")
+        except ValueError:
+            print("Entrada no válida, por favor ingrese un número.")
+    
+    cursos = list(CARRERAS[carrera_seleccionada])
+    
+    # Crear y almacenar la tupla del estudiante
+    estudiante_tupla = (RUT_estudiante, nombre)
+    lista_estudiantes.append(estudiante_tupla)
+    
+    datos_estudiantes[RUT_estudiante] = {
+        "nombre": nombre,
+        "matricula": matricula,
+        "carrera": carrera_seleccionada,
+        "cursos": cursos,
+        "calificaciones": [{"curso": curso, "nota": None} for curso in cursos]
+    }
+    
+    print(f"Estudiante {nombre} agregado con éxito a la carrera {carrera_seleccionada}.")
+    time.sleep(2)
+    return datos_estudiantes
+
+def modificar_datos_estudiante(RUT_estudiante, nombre=None, matricula=None, cursos=None):
+    if RUT_estudiante not in datos_estudiantes:
+        print("Error: Estudiante no encontrado.")
+        return datos_estudiantes
+    
+    if nombre:
+        datos_estudiantes[RUT_estudiante]["nombre"] = nombre
+    if matricula:
+        datos_estudiantes[RUT_estudiante]["matricula"] = matricula
+    if cursos is not None:
+        datos_estudiantes[RUT_estudiante]["cursos"] = cursos
+    print(f"Estudiante {RUT_estudiante} actualizado con éxito.")
+    time.sleep(2)
+    return datos_estudiantes
+
+def visualizar_estudiantes():
+    """
+    Muestra una lista de estudiantes activos con su ID, Nombre y Matrícula en formato de tabla usando pandas.
+    """
+    if not lista_estudiantes:
+        print("No hay estudiantes registrados.")
+        return
+    
+    # Preparar lista de diccionarios para crear el DataFrame
+    data = [
+        {
+            "RUT": rut_estu,
+            "Nombre": datos_estudiantes[rut_estu]["nombre"],
+            "Matrícula": datos_estudiantes[rut_estu]["matricula"]
+        }
+        for rut_estu, _ in lista_estudiantes
+    ]  
+    df = pd.DataFrame(data)
+    print(df.to_string(index=False))
+
+def eliminar_estudiante(RUT_estudiante):
+    if RUT_estudiante not in datos_estudiantes:
+        print("Error: Estudiante no encontrado.")
+        time.sleep(2)
+        return datos_estudiantes
+    
+    # Recuperamos los datos del estudiante antes de eliminarlo
+    estudiante_respaldo = datos_estudiantes.pop(RUT_estudiante)
+    global lista_estudiantes
+    lista_estudiantes = [estudiante for estudiante in lista_estudiantes if estudiante[0] != RUT_estudiante]
+    guardar_datos() # Actualizamos la base de datos
+        
+    # Guardar el estudiante eliminado en el archivo 'backup.json'
+    if os.path.exists(backup_file):
+        with open(backup_file, "r") as file:
+            backup_data = json.load(file)
+    else:
+        backup_data = {}
+    
+    backup_data[RUT_estudiante] = estudiante_respaldo
+    with open(backup_file, "w") as file:
+        json.dump(backup_data, file, indent=4)
+    print(f"Estudiante {RUT_estudiante} eliminado y respaldado correctamente en 'backup.json'.")
+    time.sleep(2)
+    return datos_estudiantes

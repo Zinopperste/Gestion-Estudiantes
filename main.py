@@ -1,8 +1,13 @@
 import os
-import gestion as gt
+import gestion.gestion_estudiantes as gte
+import gestion.Calificaciones as gcal
+import gestion.gestion_universidad as gtu
+import gestion.gestion_cursos as gtc
+import gestion.add_new_course as anc
+
 
 def menu_estudiantes():
-    listaEstudiantes = gt.cargar_datos()
+    gte.cargar_datos()
     while True:
         os.system("cls")
         print("GESTIÓN DE ESTUDIANTES")
@@ -16,18 +21,138 @@ def menu_estudiantes():
 """)
         match option:
             case "1":
-                listaEstudiantes = gt.agregar_estudiante(listaEstudiantes)
+                RUT_estudiante = input("Ingrese el RUT del estudiante: ")
+                nombre = input("Ingrese el nombre completo: ")
+                matricula = input("Ingrese el número de matrícula: ")
+                gte.agregar_estudiante(RUT_estudiante, nombre, matricula)
             case "2":
-                listaEstudiantes = gt.modificar_datos_estudiante(listaEstudiantes)
+                RUT_estudiante = input("Ingrese el RUT del estudiante a actualizar: ")
+                nombre = input("Ingrese el nuevo nombre (o deje vacío para no modificar): ")
+                matricula = input("Ingrese la nueva matrícula (o deje vacío para no modificar): ")
+                cursos = input("Ingrese los nuevos cursos separados por comas (o deje vacío para no modificar): ")
+                cursos = cursos.split(",") if cursos else None
+                gte.modificar_datos_estudiante(RUT_estudiante, nombre or None, matricula or None, cursos)
             case "3":
-                gt.visualizar_estudiantes(listaEstudiantes)
+                gte.visualizar_estudiantes()
                 input("Presione una tecla para continuar ")
             case "4":
-                listaEstudiantes = gt.eliminar_estudiante(listaEstudiantes)
+                RUT_estudiante = input("Ingrese el RUT del estudiante a eliminar: ")
+                gte.eliminar_estudiante(RUT_estudiante)
             case "5":
-                gt.guardar_datos(listaEstudiantes)
+                gte.guardar_datos()
                 break
 
+def menu_calificaciones():
+    while True:
+        os.system("cls")
+        print("""
+GESTIÓN DE CALIFICACIONES
+1) Visualizar calificaciones por carrera
+2) Visualizar calificaciones por sede
+3) Modificar calificación de un estudiante
+4) Volver al menú principal
+""")
+        opcion = input("Seleccione una opción: ")
+        if opcion == "1":
+            carrera = input("Ingrese el nombre de la carrera: ")
+            gcal.visualizar_calificaciones_carrera(carrera)
+        elif opcion == "2":
+            sede = input("Ingrese el nombre de la sede: ")
+            gcal.visualizar_calificaciones_sede(sede)
+        elif opcion == "3":
+            rut = input("Ingrese el RUT del estudiante: ")
+            curso = input("Ingrese el nombre del curso: ")
+            nueva_calificacion = float(input("Ingrese la nueva calificación: "))
+            gcal.modificar_calificacion(rut, curso, nueva_calificacion)
+        elif opcion == "4":
+            break
+        else:
+            print("Opción no válida.")
+       
+def menu_universidad():
+    while True:
+        print("""
+GESTIÓN DE UNIVERSIDAD
+1) Crear nueva sede
+2) Actualizar sede
+3) Eliminar sede
+4) Visualizar sedes
+5) Visualizar carreras y cursos
+6) Volver al menú principal
+""")
+        opcion = input("Seleccione una opción: ")
+        
+        match opcion:
+            case "1":
+                nombre_sede = input("Ingrese el nombre de la nueva sede: ")
+                direccion = input("Ingrese la dirección de la sede: ")
+                gtu.crear_sede(nombre_sede, direccion)
+            case "2":
+                nombre_sede = input("Ingrese el nombre de la sede a actualizar: ")
+                nueva_direccion = input("Ingrese la nueva dirección de la sede: ")
+                gtu.actualizar_sede(nombre_sede, nueva_direccion)
+            case "3":
+                nombre_sede = input("Ingrese el nombre de la sede a eliminar: ")
+                gtu.eliminar_sede(nombre_sede)
+            case "4":
+                gtu.visualizar_sedes()
+                input("Presione una tecla para continuar ")
+            case "5":
+                gtu.visualizar_carreras_y_cursos()
+                input("Presione una tecla para continuar ")
+            case "6":
+                break
+            case _:
+                print("Opción no válida.")
+
+def menu_cursos():
+    while True:
+        print("""
+GESTIÓN DE CURSOS
+1) Visualizar cursos de una carrera
+2) Agregar curso a estudiante
+3) Eliminar curso de estudiante
+4) Agregar curso a carrera
+5) Actualizar curso en carrera
+6) Eliminar curso de carrera
+7) Volver al menú principal
+""")
+        opcion = input("Seleccione una opción: ")
+        match opcion:
+            case "1":
+                carrera = input("Ingrese el nombre de la carrera: ")
+                gtc.visualizar_cursos(carrera)
+                input("Presione una tecla para continuar ") 
+            case "2":
+                rut_estudiante = input("Ingrese el RUT del estudiante: ")
+                curso = input("Ingrese el nombre del curso a agregar: ")
+                gtc.agregar_curso_estudiante(rut_estudiante, curso)
+                input("Presione una tecla para continuar ")    
+            case "3":
+                rut_estudiante = input("Ingrese el RUT del estudiante: ")
+                curso = input("Ingrese el nombre del curso a eliminar: ")
+                gtc.eliminar_curso_estudiante(rut_estudiante, curso)
+                input("Presione una tecla para continuar ")   
+            case "4":
+                nombre_carrera = input("Ingrese el nombre de la carrera: ")
+                curso = input("Ingrese el nombre del curso a agregar a la carrera: ")
+                anc.agregar_curso(nombre_carrera, curso)
+                input("Presione una tecla para continuar ")    
+            case "5":
+                nombre_carrera = input("Ingrese el nombre de la carrera: ")
+                curso_actual = input("Ingrese el nombre del curso a actualizar: ")
+                curso_nuevo = input("Ingrese el nuevo nombre del curso: ")
+                anc.actualizar_curso(nombre_carrera, curso_actual, curso_nuevo)
+                input("Presione una tecla para continuar ")             
+            case "6":
+                nombre_carrera = input("Ingrese el nombre de la carrera: ")
+                curso = input("Ingrese el nombre del curso a eliminar de la carrera: ")
+                anc.eliminar_curso(nombre_carrera, curso)
+                input("Presione una tecla para continuar ")             
+            case "7":
+                break
+            case _:
+                print("Opción no válida.")
 
 while True:
     os.system("cls")
@@ -42,44 +167,20 @@ Menú:
 """)
 
     match options:
-        
-#Menú para la gestión de los estudiantes
         case "1":
             menu_estudiantes()
-
-#Menú para la gestion de los cursos y calificaciónes
         case "2":
-            os.system("cls")
-            match options:
+            opt = input("1) Cursos\n2) Calificaciónes\n")
+            match opt:
                 case "1":
-                    pass
+                    menu_cursos()
                 case "2":
-                    pass
-                case "3":
-                    pass
-        
-#Menú para la gestión de la universidad 
+                    menu_calificaciones()
         case "3":
-            os.system("cls")
-            print("GESTIÓN DE LA UNIVERSIDAD")
-            options = input(
-"""
-?) Recuperar Datos del Estudiante
-""")
-            match options:
-                case "1":
-                    pass
-                case "2":
-                    pass
-                case "3":
-                    pass
-        
-#Salir del sistema
+            menu_universidad()
         case "4":
             os.system("cls")
             print("SALISTE DEL SISTEMA DE GESTIÓN")
             break
-        
-#En el caso que coloque una opción incorrecta 
         case _:
-            print("Elige una de las opciones válidas")
+            print("Elige una de las opciones válidas.")

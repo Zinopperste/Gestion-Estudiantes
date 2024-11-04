@@ -29,8 +29,8 @@ def menu_principal():
                 print("Opcion invalida")
 
 def menu_estudiantes():
-    info_estudiantes = gt.info_estudiantes()
-    estudiantes = gt.cargar_datos_json_estudiantes()
+    info_estudiantes = db_json["estudiantes"]["info_estudiantes"]
+    estudiantes = db_json["estudiantes"]
     while True:
         print(
 """
@@ -43,8 +43,8 @@ def menu_estudiantes():
         choice_estudiante = input("Escriba su opcion porfavor: ")
         match choice_estudiante:
             case "1":
-                calificaciones = gt.datos_calificaciones()
-                cursos = gt.info_cursos()
+                calificaciones = db_json["estudiantes"]["calificaciones"]
+                cursos = db_json["estudiantes"]["cursos"]
                 info_estudiantes, calificaciones, cursos = gt.agregar_info_estudiante(info_estudiantes, calificaciones, cursos)
             case "2":
                 info_estudiantes = gt.modificar_info_estudiante(info_estudiantes)
@@ -57,14 +57,15 @@ def menu_estudiantes():
                 estudiantes = gt.actualizar_info_calificaciones(calificaciones, estudiantes)
                 estudiantes = gt.actualizar_info_cursos(cursos, estudiantes)
                 db_json["info_estudiantes"] = estudiantes
+                break
             case _:
                 print("Opcion invalida")
 
 def menu_cursos():
-    estudiantes = gt.cargar_datos_json_estudiantes()
-    cursos = gt.cargar_datos_json_cursos()
-    cursos_estudiante = gt.info_cursos()
-    calificaciones = gt.datos_calificaciones()
+    estudiantes = db_json["estudiantes"]
+    cursos = db_json["cursos"]
+    cursos_estudiante = db_json["estudiantes"]["cursos"]
+    calificaciones = db_json["estudiantes"]["calificaciones"]
     while True:
         print(
 """
@@ -108,7 +109,7 @@ def menu_cursos():
                 print("Opcion invalida")
 
 def menu_universidad():
-    sedes = gt.cargar_datos_json_sedes()
+    sedes = db_json["sedes"]
     while True:
         print(
 """

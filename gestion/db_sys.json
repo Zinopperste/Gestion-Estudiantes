@@ -1,21 +1,15 @@
 {
-    "estudiantes": {
-        "info_estudiantes": [
-            [
-                "UwU",
-                "gdfgdg",
-                "fdgfdg"
-            ]
-        ],
-        "cursos": [
-            
-        ],
-        "calificaciones": [
-            
-        ]
-    },
-    "cursos": [
+  "estudiantes": {
+    "info_estudiantes": [
+      [
+        "UwU",
+        "gdfgdg",
+        "fdgfdg"
+      ]
     ],
-    "sedes": [
-    ]
+    "cursos": [],
+    "calificaciones": []
+  },
+  "cursos": [],
+  "sedes": []
 }

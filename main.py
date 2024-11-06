@@ -1,4 +1,6 @@
 import gestion as gt
+import os
+import msvcrt
 
 def menu_principal():
     global db_json
@@ -27,11 +29,15 @@ def menu_principal():
                 break
             case _:
                 print("Opcion invalida")
+                msvcrt.getch()
 
 def menu_estudiantes():
     info_estudiantes = db_json["estudiantes"]["info_estudiantes"]
     estudiantes = db_json["estudiantes"]
+    calificaciones = db_json["estudiantes"]["calificaciones"]
+    cursos = db_json["estudiantes"]["cursos"]
     while True:
+        os.system('cls')
         print(
 """
 1. Agregar infromacion de un estudiante
@@ -41,17 +47,30 @@ def menu_estudiantes():
 5. Volver atras
 """)
         choice_estudiante = input("Escriba su opcion porfavor: ")
+        os.system('cls')
         match choice_estudiante:
             case "1":
-                calificaciones = db_json["estudiantes"]["calificaciones"]
-                cursos = db_json["estudiantes"]["cursos"]
                 info_estudiantes, calificaciones, cursos = gt.agregar_info_estudiante(info_estudiantes, calificaciones, cursos)
+                msvcrt.getch()
+                os.system('cls')
             case "2":
+                gt.visualizar_estudiantes(info_estudiantes)
+                msvcrt.getch()
+                os.system('cls')
                 info_estudiantes = gt.modificar_info_estudiante(info_estudiantes)
+                msvcrt.getch()
+                os.system('cls')
             case "3":
+                gt.visualizar_estudiantes(info_estudiantes)
+                msvcrt.getch()
+                os.system('cls')
                 info_estudiantes = gt.eliminar_info_estudiante(info_estudiantes, db_backup)
+                msvcrt.getch()
+                os.system('cls')
             case "4":
                 gt.visualizar_estudiantes(info_estudiantes)
+                msvcrt.getch()
+                os.system('cls')
             case "5":
                 estudiantes = gt.actualizar_info_estudiantes(info_estudiantes, estudiantes)
                 estudiantes = gt.actualizar_info_calificaciones(calificaciones, estudiantes)
@@ -60,6 +79,7 @@ def menu_estudiantes():
                 break
             case _:
                 print("Opcion invalida")
+                msvcrt.getch()
 
 def menu_cursos():
     estudiantes = db_json["estudiantes"]
@@ -67,6 +87,7 @@ def menu_cursos():
     cursos_estudiante = db_json["estudiantes"]["cursos"]
     calificaciones = db_json["estudiantes"]["calificaciones"]
     while True:
+        os.system('cls')
         print(
 """
 1. Agregar curso
@@ -75,42 +96,80 @@ def menu_cursos():
 4. Visualizar los cursos
 5. Añadir curso a estudiante
 6. Eliminar curso a estudiante
-7. Añadir calificacion a estudiante
-8. Eliminar calificacion a estudiante
-9. Visualizar calificaciones
-10. Volver atras
+7. Visualizar cursos de estudiantes
+8. Añadir calificacion a estudiante
+9. Eliminar calificacion a estudiante
+10. Visualizar calificaciones
+11. Volver atras
 """)
         choice_curso = input("Escriba su opcion porfavor: ")
+        os.system('cls')
         match choice_curso:
             case "1":
                 cursos = gt.agregar_curso(cursos)
+                msvcrt.getch()
+                os.system('cls')
             case "2":
+                gt.visualizar_cursos(cursos)
+                msvcrt.getch()
+                os.system('cls')
                 cursos = gt.modificar_curso(cursos)
+                msvcrt.getch()
+                os.system('cls')
             case "3":
+                gt.visualizar_cursos(cursos)
+                msvcrt.getch()
+                os.system('cls')
                 cursos = gt.eliminar_curso(cursos, db_backup)
+                msvcrt.getch()
+                os.system('cls')
             case "4":
                 gt.visualizar_cursos(cursos)
+                msvcrt.getch()
+                os.system('cls')
             case "5":
                 cursos_estudiante = gt.agregar_curso_estudiante(cursos, cursos_estudiante)
+                msvcrt.getch()
+                os.system('cls')
             case "6":
                 cursos_estudiante = gt.eliminar_curso_estudiante(cursos_estudiante, db_backup)
+                msvcrt.getch()
+                os.system('cls')
             case "7":
-                calificaciones = gt.Agregar_calificaciones(calificaciones)
+                gt.visualizar_cursos_estudiantes(cursos_estudiante)
+                msvcrt.getch()
+                os.system('cls')
             case "8":
-                calificaciones = gt.eliminar_calificaciones(calificaciones, db_backup)
+                gt.visualizar_calificaciones(calificaciones)
+                msvcrt.getch()
+                os.system('cls')
+                calificaciones = gt.Agregar_calificaciones(calificaciones)
+                msvcrt.getch()
+                os.system('cls')
             case "9":
                 gt.visualizar_calificaciones(calificaciones)
+                msvcrt.getch()
+                os.system('cls')
+                calificaciones = gt.eliminar_calificaciones(calificaciones, db_backup)
+                msvcrt.getch()
+                os.system('cls')
             case "10":
+                gt.visualizar_calificaciones(calificaciones)
+                msvcrt.getch()
+                os.system('cls')
+            case "11":
                 estudiantes = gt.actualizar_info_calificaciones(calificaciones, estudiantes)
                 estudiantes = gt.actualizar_info_cursos(cursos_estudiante, estudiantes)
                 db_json["cursos"] = cursos
                 break
             case _:
                 print("Opcion invalida")
+                msvcrt.getch()
 
 def menu_universidad():
     sedes = db_json["sedes"]
     while True:
+        os.system('cls')
         print(
 """
 1. Agregar sede de la universidad
@@ -120,15 +179,30 @@ def menu_universidad():
 5. Volver atras
 """)
         choice_universidad = input("Escriba su opcion porfavor: ")
+        os.system('cls')
         match choice_universidad:
             case "1":
                 sedes = gt.agregar_sede(sedes)
+                msvcrt.getch()
+                os.system('cls')
             case "2":
+                gt.visualizar_sedes(sedes)
+                msvcrt.getch()
+                os.system('cls')
                 sedes = gt.modificar_sede(sedes)
+                msvcrt.getch()
+                os.system('cls')
             case "3":
+                gt.visualizar_sedes(sedes)
+                msvcrt.getch()
+                os.system('cls')
                 sedes = gt.eliminar_sede(sedes, db_backup)
+                msvcrt.getch()
+                os.system('cls')
             case "4":
                 gt.visualizar_sedes(sedes)
+                msvcrt.getch()
+                os.system('cls')
             case "5":
                 db_json["sedes"] = sedes
                 break

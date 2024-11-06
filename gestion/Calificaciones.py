@@ -25,8 +25,10 @@ def Agregar_calificaciones(calificaciones):
                     return calificaciones
                 else:
                     print("No es una materia valida")
+                    return calificaciones
     else:
         print("RUT no encontrado")
+        return calificaciones
 
 def eliminar_calificaciones(calificaciones, db_backup):
     visualizar_calificaciones(calificaciones)
@@ -53,6 +55,7 @@ def eliminar_calificaciones(calificaciones, db_backup):
                     print("No es una materia valida")
     else:
         print("RUT no encontrado")
+        return calificaciones
 
 def visualizar_calificaciones(calificaciones):
     for estudiante in calificaciones:

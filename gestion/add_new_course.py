@@ -13,6 +13,7 @@ def agregar_curso(cursos):
     cursos = list(cursos)
     cursos.append(nuevo_curso)
     cursos = tuple(cursos)
+    print("Curso agregado con exito")
     return cursos
 
 def actualizar_info_cursos(cursos, db_json):

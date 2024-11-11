@@ -71,10 +71,13 @@ def eliminar_curso_estudiante(cursos_estudiante, db_backup):
         return cursos_estudiante
 
 def visualizar_cursos_estudiantes(cursos_estudiantes):
-    for estudiante in cursos_estudiantes:
+     for estudiante in cursos_estudiantes:
         rut = estudiante[0]
         cursos = estudiante[1]
 
-        print(f"Cursos de el estudiante con RUT {rut}:")
-        for curso in cursos:
-            print(f"  {curso}: {cursos_estudiantes if cursos_estudiantes else 'No hay cursos'}")
+        print(f"Cursos del estudiante con RUT {rut}:")
+        if cursos:
+            for curso in cursos:
+                print(f"  - {curso}")
+        else:
+            print("  No hay cursos")
